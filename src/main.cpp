@@ -519,7 +519,8 @@ void setup()
   Serial.begin( 9600 ); /*serial init */
 
   //LCD init
-  lcd.begin();          
+  lcd.begin();
+  lcd.invertDisplay(true);          
   lcd.setRotation(1); 
   lcd.fillScreen(TFT_BLACK);
 

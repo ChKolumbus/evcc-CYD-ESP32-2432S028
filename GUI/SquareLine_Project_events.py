@@ -18,3 +18,15 @@ def eventSliderSocLimitChanged(event_struct):
 def sendEvccLimitSoc(event_struct):
     return
 
+
+def sendEvccModeOff(event_struct):
+    return
+
+
+def sendEvccModeMinPV(event_struct):
+    return
+
+
+def sendEvccModeMinPv(event_struct):
+    return
+

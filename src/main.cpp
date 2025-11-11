@@ -394,15 +394,28 @@ void callback(char* topic, byte* message, unsigned int length) {
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/loadpoints/" + (String)LOADPOINT + "/mode") {
     if(messageTemp == "pv"){
       lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_PV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
       lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      
     }
     else if(messageTemp == "now"){
       lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_NOW_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
       lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
     }
-    else if(messageTemp == "off" || messageTemp == "minpv"){
+    else if(messageTemp == "off"){
+      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_PV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
       lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
       lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }    
+    else if(messageTemp == "minpv"){
+      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_MINPV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
     }
   }
 
@@ -628,6 +641,36 @@ void sendEvccModeNow(lv_event_t * e)
   serverPath += "/api/loadpoints/";
   serverPath += LOADPOINT;
   serverPath += "/mode/now";
+  http_client.begin(serverPath.c_str());
+    http_client.addHeader("Content-Type", "text/plain");
+    int httpResponseCode = http_client.POST("");
+  http_client.end();
+}
+
+void sendEvccModeMinPv(lv_event_t * e)
+{
+  String serverPath = "http://";
+  serverPath += EVCC_SERVER_IP ; 
+  serverPath += ":";
+  serverPath += (String)EVCC_SERVER_PORT;
+  serverPath += "/api/loadpoints/";
+  serverPath += LOADPOINT;
+  serverPath += "/mode/minpv";
+  http_client.begin(serverPath.c_str());
+    http_client.addHeader("Content-Type", "text/plain");
+    int httpResponseCode = http_client.POST("");
+  http_client.end();
+}
+
+void sendEvccModeOff(lv_event_t * e)
+{
+  String serverPath = "http://";
+  serverPath += EVCC_SERVER_IP ; 
+  serverPath += ":";
+  serverPath += (String)EVCC_SERVER_PORT;
+  serverPath += "/api/loadpoints/";
+  serverPath += LOADPOINT;
+  serverPath += "/mode/off";
   http_client.begin(serverPath.c_str());
     http_client.addHeader("Content-Type", "text/plain");
     int httpResponseCode = http_client.POST("");

@@ -12,8 +12,10 @@ extern "C" {
 
 void sendEvccLimitSoc(lv_event_t * e);
 void sendEvccModePV(lv_event_t * e);
+void sendEvccModeMinPv(lv_event_t * e);
 void sendEvccPlan(lv_event_t * e);
 void sendEvccModeNow(lv_event_t * e);
+void sendEvccModeOff(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

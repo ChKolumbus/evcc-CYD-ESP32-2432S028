@@ -31,10 +31,14 @@ lv_obj_t * ui_lblLadelimit = NULL;
 lv_obj_t * ui_txtLadelimit = NULL;
 lv_obj_t * ui_BtnModusPv = NULL;
 lv_obj_t * ui_txtBtnModusPv = NULL;
+lv_obj_t * ui_BtnModusMinPv = NULL;
+lv_obj_t * ui_txtBtnModusMinPv = NULL;
 lv_obj_t * ui_BtnModusPlan = NULL;
 lv_obj_t * ui_txtBtnModusPlan = NULL;
 lv_obj_t * ui_BtnModusNow = NULL;
 lv_obj_t * ui_txtBtnModusNow = NULL;
+lv_obj_t * ui_BtnModusOff = NULL;
+lv_obj_t * ui_txtBtnModusOff = NULL;
 lv_obj_t * ui_pnlSolar = NULL;
 lv_obj_t * ui_barSolarGrid = NULL;
 lv_obj_t * ui_barSolarPower = NULL;
@@ -67,6 +71,15 @@ void ui_event_BtnModusPv(lv_event_t * e)
     }
 }
 
+void ui_event_BtnModusMinPv(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        sendEvccModeMinPv(e);
+    }
+}
+
 void ui_event_BtnModusPlan(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -82,6 +95,15 @@ void ui_event_BtnModusNow(lv_event_t * e)
 
     if(event_code == LV_EVENT_CLICKED) {
         sendEvccModeNow(e);
+    }
+}
+
+void ui_event_BtnModusOff(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        sendEvccModeOff(e);
     }
 }
 
@@ -224,9 +246,9 @@ void ui_MainScreen_screen_init(void)
 
     ui_pnlCarSoc = lv_obj_create(ui_MainScreen);
     lv_obj_set_width(ui_pnlCarSoc, 75);
-    lv_obj_set_height(ui_pnlCarSoc, 35);
+    lv_obj_set_height(ui_pnlCarSoc, 30);
     lv_obj_set_x(ui_pnlCarSoc, 5);
-    lv_obj_set_y(ui_pnlCarSoc, -75);
+    lv_obj_set_y(ui_pnlCarSoc, -72);
     lv_obj_set_align(ui_pnlCarSoc, LV_ALIGN_LEFT_MID);
     lv_obj_clear_flag(ui_pnlCarSoc, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_radius(ui_pnlCarSoc, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -395,7 +417,7 @@ void ui_MainScreen_screen_init(void)
     ui_BtnModusPv = lv_btn_create(ui_MainScreen);
     lv_obj_set_width(ui_BtnModusPv, 51);
     lv_obj_set_height(ui_BtnModusPv, 50);
-    lv_obj_set_x(ui_BtnModusPv, -7);
+    lv_obj_set_x(ui_BtnModusPv, 7);
     lv_obj_set_y(ui_BtnModusPv, 40);
     lv_obj_set_align(ui_BtnModusPv, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_BtnModusPv, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
@@ -409,7 +431,7 @@ void ui_MainScreen_screen_init(void)
     ui_txtBtnModusPv = lv_label_create(ui_MainScreen);
     lv_obj_set_width(ui_txtBtnModusPv, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_txtBtnModusPv, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_txtBtnModusPv, -6);
+    lv_obj_set_x(ui_txtBtnModusPv, 7);
     lv_obj_set_y(ui_txtBtnModusPv, 41);
     lv_obj_set_align(ui_txtBtnModusPv, LV_ALIGN_CENTER);
     lv_label_set_text(ui_txtBtnModusPv, "PV");
@@ -417,6 +439,32 @@ void ui_MainScreen_screen_init(void)
     lv_obj_set_style_text_opa(ui_txtBtnModusPv, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(ui_txtBtnModusPv, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_txtBtnModusPv, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_BtnModusMinPv = lv_btn_create(ui_MainScreen);
+    lv_obj_set_width(ui_BtnModusMinPv, 51);
+    lv_obj_set_height(ui_BtnModusMinPv, 50);
+    lv_obj_set_x(ui_BtnModusMinPv, 65);
+    lv_obj_set_y(ui_BtnModusMinPv, 40);
+    lv_obj_set_align(ui_BtnModusMinPv, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_BtnModusMinPv, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_BtnModusMinPv, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_radius(ui_BtnModusMinPv, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(0x4C4C4C), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_BtnModusMinPv, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_BtnModusMinPv, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_BtnModusMinPv, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_txtBtnModusMinPv = lv_label_create(ui_MainScreen);
+    lv_obj_set_width(ui_txtBtnModusMinPv, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_txtBtnModusMinPv, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_txtBtnModusMinPv, 66);
+    lv_obj_set_y(ui_txtBtnModusMinPv, 40);
+    lv_obj_set_align(ui_txtBtnModusMinPv, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_txtBtnModusMinPv, "Min\n+\nPV");
+    lv_obj_set_style_text_color(ui_txtBtnModusMinPv, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_txtBtnModusMinPv, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_txtBtnModusMinPv, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_txtBtnModusMinPv, &lv_font_montserrat_14, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_BtnModusPlan = lv_btn_create(ui_MainScreen);
     lv_obj_set_width(ui_BtnModusPlan, 75);
@@ -460,7 +508,7 @@ void ui_MainScreen_screen_init(void)
     ui_txtBtnModusNow = lv_label_create(ui_MainScreen);
     lv_obj_set_width(ui_txtBtnModusNow, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_txtBtnModusNow, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_txtBtnModusNow, 125);
+    lv_obj_set_x(ui_txtBtnModusNow, 124);
     lv_obj_set_y(ui_txtBtnModusNow, 41);
     lv_obj_set_align(ui_txtBtnModusNow, LV_ALIGN_CENTER);
     lv_label_set_text(ui_txtBtnModusNow, "Schnell");
@@ -468,6 +516,32 @@ void ui_MainScreen_screen_init(void)
     lv_obj_set_style_text_opa(ui_txtBtnModusNow, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_align(ui_txtBtnModusNow, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_txtBtnModusNow, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_BtnModusOff = lv_btn_create(ui_MainScreen);
+    lv_obj_set_width(ui_BtnModusOff, 51);
+    lv_obj_set_height(ui_BtnModusOff, 50);
+    lv_obj_set_x(ui_BtnModusOff, -50);
+    lv_obj_set_y(ui_BtnModusOff, 40);
+    lv_obj_set_align(ui_BtnModusOff, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_BtnModusOff, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_BtnModusOff, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_radius(ui_BtnModusOff, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(0x4C4C4C), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_BtnModusOff, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_BtnModusOff, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_BtnModusOff, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_txtBtnModusOff = lv_label_create(ui_MainScreen);
+    lv_obj_set_width(ui_txtBtnModusOff, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_txtBtnModusOff, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_txtBtnModusOff, -50);
+    lv_obj_set_y(ui_txtBtnModusOff, 40);
+    lv_obj_set_align(ui_txtBtnModusOff, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_txtBtnModusOff, "Aus");
+    lv_obj_set_style_text_color(ui_txtBtnModusOff, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_txtBtnModusOff, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_txtBtnModusOff, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_txtBtnModusOff, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_pnlSolar = lv_obj_create(ui_MainScreen);
     lv_obj_set_width(ui_pnlSolar, 320);
@@ -616,8 +690,10 @@ void ui_MainScreen_screen_init(void)
 
     lv_obj_add_event_cb(ui_sliderSocLimit, ui_event_sliderSocLimit, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_BtnModusPv, ui_event_BtnModusPv, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_BtnModusMinPv, ui_event_BtnModusMinPv, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_BtnModusPlan, ui_event_BtnModusPlan, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_BtnModusNow, ui_event_BtnModusNow, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_BtnModusOff, ui_event_BtnModusOff, LV_EVENT_ALL, NULL);
 
 }
 
@@ -652,10 +728,14 @@ void ui_MainScreen_screen_destroy(void)
     ui_txtLadelimit = NULL;
     ui_BtnModusPv = NULL;
     ui_txtBtnModusPv = NULL;
+    ui_BtnModusMinPv = NULL;
+    ui_txtBtnModusMinPv = NULL;
     ui_BtnModusPlan = NULL;
     ui_txtBtnModusPlan = NULL;
     ui_BtnModusNow = NULL;
     ui_txtBtnModusNow = NULL;
+    ui_BtnModusOff = NULL;
+    ui_txtBtnModusOff = NULL;
     ui_pnlSolar = NULL;
     ui_barSolarGrid = NULL;
     ui_barSolarPower = NULL;

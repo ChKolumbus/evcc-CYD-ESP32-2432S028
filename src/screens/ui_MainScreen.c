@@ -693,7 +693,7 @@ void ui_MainScreen_screen_init(void)
     ui_lblSolarPower = lv_label_create(ui_MainScreen);
     lv_obj_set_width(ui_lblSolarPower, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_lblSolarPower, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_lblSolarPower, -96);
+    lv_obj_set_x(ui_lblSolarPower, -91);
     lv_obj_set_y(ui_lblSolarPower, 86);
     lv_obj_set_align(ui_lblSolarPower, LV_ALIGN_CENTER);
     lv_label_set_text(ui_lblSolarPower, "--- W");
@@ -705,7 +705,7 @@ void ui_MainScreen_screen_init(void)
     ui_lblGridPower = lv_label_create(ui_MainScreen);
     lv_obj_set_width(ui_lblGridPower, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_lblGridPower, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_lblGridPower, 98);
+    lv_obj_set_x(ui_lblGridPower, 94);
     lv_obj_set_y(ui_lblGridPower, 86);
     lv_obj_set_align(ui_lblGridPower, LV_ALIGN_CENTER);
     lv_label_set_text(ui_lblGridPower, "--- W");

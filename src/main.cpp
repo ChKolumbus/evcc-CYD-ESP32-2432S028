@@ -194,6 +194,7 @@ void setup_wifi() {
 
 void callback(char* topic, byte* message, unsigned int length) {
   String messageTemp;
+  String powerText;
   
   /* Convert char to NUL terminated string */
   for (int i = 0; i < length; i++) {
@@ -270,7 +271,16 @@ void callback(char* topic, byte* message, unsigned int length) {
 
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/gridPower") {
     int messageTempInt = messageTemp.toInt(); // remove decimals
-   if (messageTempInt >= 100) {
+   
+    if (messageTempInt < 2000) {
+     powerText = String(messageTempInt) + " W";
+    } else {
+     powerText = String(messageTempInt / 1000.0, 2) + " kW";
+    }
+
+    lv_label_set_text(ui_lblGridPower, powerText.c_str());
+   
+    if (messageTempInt >= 100) {
       lv_bar_set_value(ui_barGridPower, abs(messageTempInt), LV_ANIM_OFF);
       lv_obj_set_style_img_recolor(ui_ImgGrid, lv_color_hex(COL_RED), LV_PART_MAIN | LV_STATE_DEFAULT);
       lv_obj_set_style_bg_color(ui_barGridPower, lv_color_hex(COL_RED), LV_PART_INDICATOR | LV_STATE_DEFAULT);
@@ -296,6 +306,15 @@ void callback(char* topic, byte* message, unsigned int length) {
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/pvPower") {
    int messageTempInt = messageTemp.toInt(); // remove decimals
    lv_bar_set_value(ui_barSolarPower, messageTempInt, LV_ANIM_OFF);
+  
+   if (messageTempInt < 2000) {
+    powerText = String(messageTempInt) + " W";
+   } else {
+    powerText = String(messageTempInt / 1000.0, 2) + " kW";
+   }
+
+  lv_label_set_text(ui_lblSolarPower, powerText.c_str());
+
    if (messageTempInt >= 100) {
       lv_obj_set_style_img_recolor(ui_ImgSolar, lv_color_hex(COL_YELLOW), LV_PART_MAIN | LV_STATE_DEFAULT);
       lv_obj_set_style_bg_color(ui_barSolarPower, lv_color_hex(COL_INTENSE_GREEN), LV_PART_INDICATOR | LV_STATE_DEFAULT);

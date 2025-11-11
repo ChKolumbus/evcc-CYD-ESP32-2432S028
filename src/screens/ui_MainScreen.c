@@ -48,6 +48,8 @@ lv_obj_t * ui_barGridPower = NULL;
 lv_obj_t * ui_pnlDark = NULL;
 lv_obj_t * ui_lblWifiWait = NULL;
 lv_obj_t * ui_lblMqttWait = NULL;
+lv_obj_t * ui_lblSolarPower = NULL;
+lv_obj_t * ui_lblGridPower = NULL;
 // event funtions
 void ui_event_sliderSocLimit(lv_event_t * e)
 {
@@ -688,6 +690,30 @@ void ui_MainScreen_screen_init(void)
     lv_obj_set_style_pad_top(ui_lblMqttWait, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_pad_bottom(ui_lblMqttWait, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
 
+    ui_lblSolarPower = lv_label_create(ui_MainScreen);
+    lv_obj_set_width(ui_lblSolarPower, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_lblSolarPower, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_lblSolarPower, -96);
+    lv_obj_set_y(ui_lblSolarPower, 86);
+    lv_obj_set_align(ui_lblSolarPower, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_lblSolarPower, "--- W");
+    lv_obj_set_style_text_color(ui_lblSolarPower, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_lblSolarPower, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_lblSolarPower, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_lblSolarPower, &lv_font_montserrat_10, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_lblGridPower = lv_label_create(ui_MainScreen);
+    lv_obj_set_width(ui_lblGridPower, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_lblGridPower, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_lblGridPower, 98);
+    lv_obj_set_y(ui_lblGridPower, 86);
+    lv_obj_set_align(ui_lblGridPower, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_lblGridPower, "--- W");
+    lv_obj_set_style_text_color(ui_lblGridPower, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_lblGridPower, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_lblGridPower, LV_TEXT_ALIGN_RIGHT, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_lblGridPower, &lv_font_montserrat_10, LV_PART_MAIN | LV_STATE_DEFAULT);
+
     lv_obj_add_event_cb(ui_sliderSocLimit, ui_event_sliderSocLimit, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_BtnModusPv, ui_event_BtnModusPv, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_BtnModusMinPv, ui_event_BtnModusMinPv, LV_EVENT_ALL, NULL);
@@ -745,5 +771,7 @@ void ui_MainScreen_screen_destroy(void)
     ui_pnlDark = NULL;
     ui_lblWifiWait = NULL;
     ui_lblMqttWait = NULL;
+    ui_lblSolarPower = NULL;
+    ui_lblGridPower = NULL;
 
 }

@@ -62,6 +62,8 @@ extern lv_obj_t * ui_barGridPower;
 extern lv_obj_t * ui_pnlDark;
 extern lv_obj_t * ui_lblWifiWait;
 extern lv_obj_t * ui_lblMqttWait;
+extern lv_obj_t * ui_lblSolarPower;
+extern lv_obj_t * ui_lblGridPower;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

@@ -30,3 +30,19 @@ def sendEvccModeMinPV(event_struct):
 def sendEvccModeMinPv(event_struct):
     return
 
+
+def Send(event_struct):
+    return
+
+
+def sendEvccModeBatteryUnlock(event_struct):
+    return
+
+
+def sendEvccModeBatteryLock(event_struct):
+    return
+
+
+def eventImgEvccIconSend(event_struct):
+    return
+

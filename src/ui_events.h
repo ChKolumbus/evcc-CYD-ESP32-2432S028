@@ -10,6 +10,8 @@
 extern "C" {
 #endif
 
+void sendEvccModeBatteryLock(lv_event_t * e);
+void sendEvccModeBatteryUnlock(lv_event_t * e);
 void sendEvccLimitSoc(lv_event_t * e);
 void sendEvccModePV(lv_event_t * e);
 void sendEvccModeMinPv(lv_event_t * e);

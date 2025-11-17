@@ -269,6 +269,17 @@ void callback(char* topic, byte* message, unsigned int length) {
    }
   }
 
+  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/batteryDischargeControl") {
+   if (messageTemp == "false") {
+      lv_obj_clear_flag(ui_ImgBattery, LV_OBJ_FLAG_HIDDEN);
+      lv_obj_add_flag(ui_ImgBatteryLock, LV_OBJ_FLAG_HIDDEN);
+   }
+   else {
+      lv_obj_add_flag(ui_ImgBattery, LV_OBJ_FLAG_HIDDEN);
+      lv_obj_clear_flag(ui_ImgBatteryLock, LV_OBJ_FLAG_HIDDEN);
+   }
+  }
+
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/grid/power") {
     int messageTempInt = messageTemp.toInt(); // remove decimals
    
@@ -369,7 +380,8 @@ void callback(char* topic, byte* message, unsigned int length) {
     lv_label_set_text(ui_lblLadepunkt, String(LOADPOINT + ": " + messageTemp).c_str());
   }
 
-  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/vehicles/" + ConnectedCar + "/title") {
+  //else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/vehicles/" + ConnectedCar + "/title") {
+  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/loadpoints/" + (String)LOADPOINT + "/vehicleTitle") {
     // Serial.println("MQTT: "+ ConnectedCar);
     lv_label_set_text(ui_lblAuto, messageTemp.c_str());
   }
@@ -481,7 +493,8 @@ void reconnect() {
         "planProjectedStart",
         "effectivePlanSoc",
         "title",
-        "vehicleName"
+        "vehicleName",
+        "vehicleTitle"
         };
 
       for (int i = 0; i < (sizeof(loadpoint_topics) / sizeof(loadpoint_topics[0]));i++){
@@ -500,7 +513,8 @@ void reconnect() {
         "battery",
         "batterySoc", 
         "bufferSoc", 
-        "batteryPower", 
+        "batteryPower",
+        "batteryDischargeControl", 
         "gridPower", 
         "pvPower",
         "grid/power"
@@ -654,6 +668,34 @@ void sendEvccModePV(lv_event_t * e)
   http_client.end();
 }
 
+void sendEvccModeBatteryLock(lv_event_t * e)
+{
+  String serverPath = "http://";
+  Serial.print("Event: sendEvccModeBatteryLock");
+  serverPath += EVCC_SERVER_IP ; 
+  serverPath += ":";
+  serverPath += (String)EVCC_SERVER_PORT;
+  serverPath += "/api/batterydischargecontrol/true";
+  http_client.begin(serverPath.c_str());
+    http_client.addHeader("Content-Type", "text/plain");
+    int httpResponseCode = http_client.POST("");
+  http_client.end();
+}
+
+void sendEvccModeBatteryUnlock(lv_event_t * e)
+{
+  String serverPath = "http://";
+    Serial.print("Event: sendEvccModeBatteryUnlock");
+  serverPath += EVCC_SERVER_IP ; 
+  serverPath += ":";
+  serverPath += (String)EVCC_SERVER_PORT;
+  serverPath += "/api/batterydischargecontrol/false";
+  http_client.begin(serverPath.c_str());
+    http_client.addHeader("Content-Type", "text/plain");
+    int httpResponseCode = http_client.POST("");
+  http_client.end();
+}
+
 void sendEvccModeNow(lv_event_t * e)
 {
   String serverPath = "http://";
@@ -751,6 +793,7 @@ void sendEvccLimitSoc(lv_event_t * e)
   http_client.end();
 
 }
+
 
 void loop()
 {

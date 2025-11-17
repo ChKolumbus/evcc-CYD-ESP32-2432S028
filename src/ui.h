@@ -31,6 +31,7 @@ extern lv_obj_t * ui____initial_actions0;
 // IMAGES AND IMAGE SETS
 LV_IMG_DECLARE(ui_img_evcc_logo_png);    // assets/evcc_logo.png
 LV_IMG_DECLARE(ui_img_1529214255);    // assets/battery-2.png
+LV_IMG_DECLARE(ui_img_940810286);    // assets/battery-lock.png
 LV_IMG_DECLARE(ui_img_955610505);    // assets/ev-charging-plug-icon.png
 LV_IMG_DECLARE(ui_img_9025960_sun_icon_png);    // assets/9025960_sun_icon.png
 LV_IMG_DECLARE(ui_img_1680447448);    // assets/electrical-tower-svgrepo-com.png

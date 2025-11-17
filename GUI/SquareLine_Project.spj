@@ -233,7 +233,7 @@
                 "flags": 51,
                 "strtype": "OBJECT/Size",
                 "intarray": [
-                  1,
+                  80,
                   1
                 ],
                 "InheritedType": 7
@@ -246,7 +246,6 @@
               },
               {
                 "nid": -459535128,
-                "flags": 1048576,
                 "strtype": "OBJECT/Flags",
                 "InheritedType": 1
               },
@@ -631,7 +630,6 @@
               },
               {
                 "nid": -1002951728,
-                "flags": 1048576,
                 "strtype": "OBJECT/Flags",
                 "InheritedType": 1
               },
@@ -639,12 +637,6 @@
                 "nid": 100,
                 "strtype": "OBJECT/Hidden",
                 "strval": "True",
-                "InheritedType": 2
-              },
-              {
-                "nid": 506325195,
-                "strtype": "OBJECT/Clickable",
-                "strval": "False",
                 "InheritedType": 2
               },
               {
@@ -886,15 +878,8 @@
               },
               {
                 "nid": -1002951728,
-                "flags": 1048576,
                 "strtype": "OBJECT/Flags",
                 "InheritedType": 1
-              },
-              {
-                "nid": 506325195,
-                "strtype": "OBJECT/Clickable",
-                "strval": "False",
-                "InheritedType": 2
               },
               {
                 "nid": 1014998617,
@@ -9233,7 +9218,7 @@
     "theme_color1": 5,
     "theme_color2": 0,
     "custom_variable_prefix": "uic",
-    "backup_cnt": 321,
+    "backup_cnt": 322,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "8.3.11",
@@ -9243,7 +9228,7 @@
     "naming": "Name",
     "naming_force_lowercase": false,
     "naming_add_subcomponent": false,
-    "nidcnt": 1000030,
+    "nidcnt": 1000040,
     "BitDepth": 16,
     "Name": "SquareLine_Project"
   }

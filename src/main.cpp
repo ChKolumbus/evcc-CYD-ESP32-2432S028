@@ -58,8 +58,11 @@ static lv_color_t buf1[ screenWidth * screenHeight / 13 ];
 // Get user config
 #include "config.h"
 
-const char* ssid = SSID;
-const char* password = PASSWORD;
+const char* ssid1 = SSID;
+const char* password1 = PASSWORD;
+
+const char* ssid2 = SSID2;
+const char* password2 = PASSWORD2;
 
 // Add your MQTT Broker IP address, example:
 //const char* mqtt_server = "192.168.1.144";
@@ -163,6 +166,24 @@ void my_touchpad_read( lv_indev_drv_t * indev_drv, lv_indev_data_t * data )
 
 lv_indev_t * indev; //Touchscreen input device
 
+bool tryConnect(const char* ssid, const char* pass, unsigned long timeoutMs) {
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, pass);
+
+  unsigned long start = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - start < timeoutMs) {
+    delay(500);
+    lv_timer_handler();
+    Serial.print(".");
+  }
+
+  Serial.println();
+
+  return WiFi.status() == WL_CONNECTED;
+}
+
 /* Setup WIfi */
 void setup_wifi() {
   delay(10);
@@ -170,17 +191,37 @@ void setup_wifi() {
   lv_obj_clear_flag(ui_lblWifiWait, LV_OBJ_FLAG_HIDDEN);     /// Flags
   // We start by connecting to a WiFi network
   Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+ bool connected = false;
+  bool useFirst = true;
 
-  WiFi.begin(ssid, password);
+  while (!connected) {
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    lv_timer_handler();
-    Serial.print(".");
+    if (useFirst) {
+      connected = tryConnect(ssid1, password1, 8000);
+
+      if (connected) {
+        Serial.println("Connected to:");
+        Serial.println(ssid1);
+      }
+
+    } else {
+      connected = tryConnect(ssid2, password2, 8000);
+
+      if (connected) {
+        Serial.println("Connected to:");
+        Serial.println(ssid2);
+      }
+    }
+
+    useFirst = !useFirst;
+
+    if (!connected) {
+      Serial.println("Retrying with the other network...");
+    }
   }
 
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP());
   lv_obj_add_flag(ui_pnlDark, LV_OBJ_FLAG_HIDDEN);     /// Flags
   lv_obj_add_flag(ui_lblWifiWait, LV_OBJ_FLAG_HIDDEN);     /// Flags
   lv_timer_handler();

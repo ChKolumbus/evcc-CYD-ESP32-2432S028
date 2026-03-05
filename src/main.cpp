@@ -256,7 +256,7 @@ void callback(char* topic, byte* message, unsigned int length) {
     }
   }
 
-  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/battery") {
+  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/battery/soc") {
     MQTTdata.site_battery = messageTemp.toInt(); // remove decimals
     if(MQTTdata.site_battery == 0) {
       lv_obj_add_flag(ui_ImgBattery, LV_OBJ_FLAG_HIDDEN);
@@ -280,10 +280,20 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
 
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/loadpoints/" + (String)LOADPOINT + "/chargePower") {
-    lv_label_set_text(ui_txtLadeleistung, messageTemp.c_str());
+    // output power in W or kW depending on the value, with 2 decimal for kW and no decimals for W
+    char buf[32];
+    float power = messageTemp.toFloat();
+
+    if (power >= 2000.0) {
+        snprintf(buf, sizeof(buf), "%.2f kW", power / 1000.0);
+    } else {
+        snprintf(buf, sizeof(buf), "%.0f W", power);
+    }
+
+    lv_label_set_text(ui_txtLadeleistung, buf);
   }
 
-  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/batterySoc") {
+  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/battery/soc") {
     int messageTempInt = messageTemp.toInt(); // remove decimals
     lv_bar_set_value(ui_barHomeBattery, messageTempInt, LV_ANIM_OFF);
   }
@@ -293,7 +303,7 @@ void callback(char* topic, byte* message, unsigned int length) {
     lv_obj_set_style_bg_main_stop(ui_barHomeBattery, (255*(100-messageTempInt))/100, LV_PART_INDICATOR | LV_STATE_DEFAULT);
   }
 
-  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/batteryPower") {
+  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/battery/power") {
    int messageTempInt = messageTemp.toInt(); // remove decimals
    lv_bar_set_value(ui_barBatteryPower, abs(messageTempInt), LV_ANIM_OFF);
    if (messageTempInt > 0) {

@@ -15,7 +15,6 @@ lv_obj_t * ui_barBatteryPower = NULL;
 lv_obj_t * ui_spinLadung = NULL;
 lv_obj_t * ui_ImgPlug = NULL;
 lv_obj_t * ui_lblLadepunkt = NULL;
-lv_obj_t * ui_lblLadeleistung = NULL;
 lv_obj_t * ui_txtLadeleistung = NULL;
 lv_obj_t * ui_pnlCarSoc = NULL;
 lv_obj_t * ui_txtLadestand = NULL;
@@ -253,21 +252,10 @@ void ui_MainScreen_screen_init(void)
     lv_obj_set_style_text_align(ui_lblLadepunkt, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_lblLadepunkt, &lv_font_montserrat_10, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_lblLadeleistung = lv_label_create(ui_MainScreen);
-    lv_obj_set_width(ui_lblLadeleistung, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_lblLadeleistung, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_lblLadeleistung, -10);
-    lv_obj_set_y(ui_lblLadeleistung, -100);
-    lv_obj_set_align(ui_lblLadeleistung, LV_ALIGN_RIGHT_MID);
-    lv_label_set_text(ui_lblLadeleistung, "W");
-    lv_obj_set_style_text_color(ui_lblLadeleistung, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui_lblLadeleistung, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_lblLadeleistung, &lv_font_montserrat_24, LV_PART_MAIN | LV_STATE_DEFAULT);
-
     ui_txtLadeleistung = lv_label_create(ui_MainScreen);
     lv_obj_set_width(ui_txtLadeleistung, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_txtLadeleistung, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_txtLadeleistung, -40);
+    lv_obj_set_x(ui_txtLadeleistung, -9);
     lv_obj_set_y(ui_txtLadeleistung, -100);
     lv_obj_set_align(ui_txtLadeleistung, LV_ALIGN_RIGHT_MID);
     lv_label_set_text(ui_txtLadeleistung, "0");
@@ -770,7 +758,6 @@ void ui_MainScreen_screen_destroy(void)
     ui_spinLadung = NULL;
     ui_ImgPlug = NULL;
     ui_lblLadepunkt = NULL;
-    ui_lblLadeleistung = NULL;
     ui_txtLadeleistung = NULL;
     ui_pnlCarSoc = NULL;
     ui_txtLadestand = NULL;

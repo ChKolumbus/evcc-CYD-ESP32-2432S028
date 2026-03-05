@@ -25,7 +25,6 @@ extern lv_obj_t * ui_barBatteryPower;
 extern lv_obj_t * ui_spinLadung;
 extern lv_obj_t * ui_ImgPlug;
 extern lv_obj_t * ui_lblLadepunkt;
-extern lv_obj_t * ui_lblLadeleistung;
 extern lv_obj_t * ui_txtLadeleistung;
 extern lv_obj_t * ui_pnlCarSoc;
 extern lv_obj_t * ui_txtLadestand;

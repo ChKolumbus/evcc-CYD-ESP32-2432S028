@@ -243,7 +243,7 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
   messageTemp += '\0';
 
-  Serial.println("MQTT received: " + (String)topic);
+  Serial.println("MQTT received: " + (String)topic + " Value: " + messageTemp);
   Serial.println("ConnectedCar: " + (String)ConnectedCar);
 
   // If a message is received on the topic esp32/output, you check the text of the message. 
@@ -256,7 +256,7 @@ void callback(char* topic, byte* message, unsigned int length) {
     }
   }
 
-  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/battery/soc") {
+  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/battery") {
     MQTTdata.site_battery = messageTemp.toInt(); // remove decimals
     if(MQTTdata.site_battery == 0) {
       lv_obj_add_flag(ui_ImgBattery, LV_OBJ_FLAG_HIDDEN);
@@ -296,6 +296,7 @@ void callback(char* topic, byte* message, unsigned int length) {
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/battery/soc") {
     int messageTempInt = messageTemp.toInt(); // remove decimals
     lv_bar_set_value(ui_barHomeBattery, messageTempInt, LV_ANIM_OFF);
+    lv_label_set_text(ui_txtBatterySoc, (String(messageTempInt) + "%").c_str());
   }
 
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/site/bufferSoc") {
@@ -562,9 +563,9 @@ void reconnect() {
       // subscribe to site topics
       String site_topics[] = {
         "battery",
-        "batterySoc", 
+        "battery/soc", 
         "bufferSoc", 
-        "batteryPower",
+        "battery/power",
         "batteryDischargeControl", 
         "gridPower", 
         "pvPower",

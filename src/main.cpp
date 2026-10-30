@@ -81,6 +81,8 @@ int Plan = 0;
 int PlanSoc = 0;
 String PlanTime = "00:00";
 String ConnectedCar = "";
+String LoadpointMode = "";
+String LoadpointAlwaysCharge = "";
 
 struct data {
   int site_battery;
@@ -231,6 +233,71 @@ void setup_wifi() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
+}
+
+void updateLoadpointModeDisplay() {
+  String mode = LoadpointMode;
+  String alwaysCharge = LoadpointAlwaysCharge;
+  mode.trim();
+  alwaysCharge.trim();
+  mode.toLowerCase();
+  alwaysCharge.toLowerCase();
+
+  bool pvActive = false;
+  bool minPvActive = false;
+  bool nowActive = false;
+  bool offActive = false;
+
+  bool alwaysChargeEnabled =
+    alwaysCharge == "on" ||
+    alwaysCharge == "once" ||
+    alwaysCharge == "true" ||
+    alwaysCharge == "1";
+
+  if (mode == "smart") {
+    if (alwaysChargeEnabled) {
+      minPvActive = true;
+    } else {
+      pvActive = true;
+    }
+  }
+  else if (mode == "pv") {
+    pvActive = true;
+  }
+  else if (mode == "minpv" || alwaysChargeEnabled && mode == "smart") {
+    minPvActive = true;
+  }
+  else if (mode == "now") {
+    nowActive = true;
+  }
+  else if (mode == "off") {
+    offActive = true;
+  }
+
+  if (pvActive) {
+    lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_PV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+  }
+  else if (minPvActive) {
+    lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_MINPV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+  }
+  else if (nowActive) {
+    lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_NOW_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+  }
+  else if (offActive) {
+    lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_PV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
+  }
 }
 
 void callback(char* topic, byte* message, unsigned int length) {
@@ -477,31 +544,13 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
 
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/loadpoints/" + (String)LOADPOINT + "/mode") {
-    if(messageTemp == "pv"){
-      lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_PV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      
-    }
-    else if(messageTemp == "now"){
-      lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_NOW_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-    }
-    else if(messageTemp == "off"){
-      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_PV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-    }    
-    else if(messageTemp == "minpv"){
-      lv_obj_set_style_bg_color(ui_BtnModusMinPv, lv_color_hex(COL_BUTTON_MINPV_ACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusNow, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusPv, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-      lv_obj_set_style_bg_color(ui_BtnModusOff, lv_color_hex(COL_BUTTON_INACTIVE), LV_PART_MAIN | LV_STATE_DEFAULT);
-    }
+    LoadpointMode = messageTemp;
+    updateLoadpointModeDisplay();
+  }
+
+  else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/loadpoints/" + (String)LOADPOINT + "/alwaysCharge") {
+    LoadpointAlwaysCharge = messageTemp;
+    updateLoadpointModeDisplay();
   }
 
   else if (String(topic) == (String)EVCC_MQTT_PREFIX + "/loadpoints/" + (String)LOADPOINT + "/sessionSolarPercentage") {
@@ -537,6 +586,7 @@ void reconnect() {
         "effectiveLimitSoc", 
         "effectiveMinSoc", 
         "mode", 
+        "alwaysCharge",
         "chargedEnergy", 
         "sessionSolarPercentage", 
         "vehicleSoc", 

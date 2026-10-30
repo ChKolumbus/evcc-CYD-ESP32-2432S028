@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "string": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "C:/Christoph/PlatformIO Git/evcc-CYD-ESP32-2432S028/src"
 }

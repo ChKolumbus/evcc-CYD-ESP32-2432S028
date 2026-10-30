@@ -746,6 +746,10 @@ void setup()
 
 void sendEvccModePV(lv_event_t * e)
 {
+  LoadpointMode = "smart";
+  LoadpointAlwaysCharge = "off";
+  updateLoadpointModeDisplay();
+
   String serverPath = "http://";
   serverPath += EVCC_SERVER_IP ; 
   serverPath += ":";
@@ -815,6 +819,10 @@ void sendEvccModeNow(lv_event_t * e)
 
 void sendEvccModeMinPv(lv_event_t * e)
 {
+  LoadpointMode = "smart";
+  LoadpointAlwaysCharge = "on";
+  updateLoadpointModeDisplay();
+
   String serverPath = "http://";
   serverPath += EVCC_SERVER_IP ; 
   serverPath += ":";

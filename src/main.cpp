@@ -75,6 +75,23 @@ PubSubClient wifi_client(espClient);
 long lastMsg = 0;
 char msg[50];
 int value = 0;
+const unsigned long CONNECTION_LOSS_RESTART_TIMEOUT_MS = 60UL * 60UL * 1000UL;
+unsigned long connectionLossStartedAt = 0;
+bool connectionLossActive = false;
+
+void startConnectionLossTimer() {
+  if (!connectionLossActive) {
+    connectionLossStartedAt = millis();
+    connectionLossActive = true;
+  }
+}
+
+void checkConnectionLossTimeout() {
+  if (millis() - connectionLossStartedAt >= CONNECTION_LOSS_RESTART_TIMEOUT_MS) {
+    Serial.println("Network connection unavailable for one hour, restarting");
+    ESP.restart();
+  }
+}
 
 // Some internal temporary variables
 int Plan = 0;
@@ -178,6 +195,7 @@ bool tryConnect(const char* ssid, const char* pass, unsigned long timeoutMs) {
   while (WiFi.status() != WL_CONNECTED && millis() - start < timeoutMs) {
     delay(500);
     lv_timer_handler();
+    checkConnectionLossTimeout();
     Serial.print(".");
   }
 
@@ -189,6 +207,7 @@ bool tryConnect(const char* ssid, const char* pass, unsigned long timeoutMs) {
 /* Setup WIfi */
 void setup_wifi() {
   delay(10);
+  startConnectionLossTimer();
   lv_obj_clear_flag(ui_pnlDark, LV_OBJ_FLAG_HIDDEN);     /// Flags
   lv_obj_clear_flag(ui_lblWifiWait, LV_OBJ_FLAG_HIDDEN);     /// Flags
   // We start by connecting to a WiFi network
@@ -570,10 +589,13 @@ void reconnect() {
     lv_obj_clear_flag(ui_pnlDark, LV_OBJ_FLAG_HIDDEN);     /// Flags
     lv_obj_clear_flag(ui_lblMqttWait, LV_OBJ_FLAG_HIDDEN);     /// Flags
     lv_timer_handler();
+    startConnectionLossTimer();
+    checkConnectionLossTimeout();
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
     if (wifi_client.connect(MQTT_SERVER_CLIENT, MQTT_SERVER_USER, MQTT_SERVER_PASS)) {
       Serial.println("connected");
+      connectionLossActive = false;
       lv_obj_add_flag(ui_pnlDark, LV_OBJ_FLAG_HIDDEN);     /// Flags
       lv_obj_add_flag(ui_lblMqttWait, LV_OBJ_FLAG_HIDDEN);     /// Flags
       lv_timer_handler();
@@ -909,6 +931,10 @@ void loop()
 {
   lv_timer_handler();
   delay(5);
+
+  if (WiFi.status() != WL_CONNECTED) {
+    setup_wifi();
+  }
 
   if (!wifi_client.connected()) {
     reconnect();

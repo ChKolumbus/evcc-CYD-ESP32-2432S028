@@ -8,6 +8,8 @@ Somit kann man in der Garage neben der Wallbox sofort sehen, ob aktuell Übersch
 
 Das Display besitzt WLAN und verbindet sich damit ins heimische LAN, die Werte von evcc werden per MQTT geholt und angezeigt. Änderung von Werten werden per REST API an die evcc Instanz gesendet. Ein Touch-Display, sowie ein SD-Kartenleser sind auch vorhanden. Neben einem Gehäuse benötigt man nur eine 5V Versorgung, z.B. über ein USB-Netzteil.
 
+Wenn die WLAN- oder MQTT-Verbindung länger als eine Stunde unterbrochen ist, startet sich das Display automatisch neu. Der Timer wird erst zurückgesetzt, wenn WLAN und MQTT wieder verbunden sind.
+
 Ein paar Bilder finden sich in [dieser Diskussion](https://github.com/evcc-io/evcc/discussions/13152).
 
 Das Projekt ist in Visual Studio Code geschrieben mit PlatformIO IDE (v3.3.3). Das GUI ist mit SquareLine Studio v1.4.0 gestaltet, dieses unterstützt aktuell nur die LVGL Bibliothek v8.3.11 sowie die TFT_eSPI Bibliothek. Nach langem Ausprobieren habe ich hier im Projekt passende Werte für die Dateien `lv.conf.h` und `User_Setup.h` hinterlegt.
